@@ -26,7 +26,7 @@ The primary objective is to build **fair, explainable, and effective ML models**
 ## 🔥 Models & Techniques  
 The following **machine learning approaches** will be explored:  
 - **Baseline Models**: Logistic Regression, Decision Trees  
-- **Advanced Models**: XGBoost, LightGBM, Random Forest  
+- **Advanced Models**: XGBoost, LightGBM, Random Forest , Bayesian model 
  
 
 ## 📈 Evaluation Metric  
