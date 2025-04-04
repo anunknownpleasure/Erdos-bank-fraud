@@ -1,31 +1,39 @@
-## Context
+# Bank Account Fraud Detection - Erdős Bootcamp  
 
-It is important that credit card companies are able to recognize fraudulent credit card transactions so that customers are not charged for items that they did not purchase.
+## 👥 Our Team  
+We are a team of ** ? ** participants in the **Erdős Bootcamp**, working on the **Bank Account Fraud (BAF) Kaggle competition**. Our goal is to develop fair, explainable, and effective ML models for fraud detection, tackling challenges such as **class imbalance, bias, and temporal shifts**.  
 
-## Content
+## 🚀 Project Overview  
+This repository contains our work for the **Bank Account Fraud (BAF) Kaggle competition**, which is based on the **NeurIPS 2022 BAF dataset**. The competition provides a **realistic, privacy-preserving, and imbalanced** fraud detection dataset.  
 
-The dataset contains transactions made by credit cards in September 2013 by European cardholders.
+## 📌 Dataset  
+The **BAF dataset** consists of **six synthetic tabular datasets** designed to simulate real-world fraud detection scenarios. It features:  
+- **Extremely imbalanced data** with a low prevalence of fraud cases.  
+- **Controlled biases** across different datasets.  
+- **Temporal aspects** with observed distribution shifts.  
+- **Privacy-preserving features**, including **differential privacy techniques** and a **CTGAN-generated dataset**.  
 
-This dataset presents transactions that occurred in two days, where we have 492 frauds out of 284,807 transactions. The dataset is highly unbalanced, the positive class (frauds) account for 0.172% of all transactions.
+For more details, check out the [official Kaggle competition page](https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022?select=Base.csv).  
 
-It contains only numerical input variables which are the result of a PCA transformation. Unfortunately, due to confidentiality issues, we cannot provide the original features and more background information about the data. Features V1, V2, … V28 are the principal components obtained with PCA, the only features which have not been transformed with PCA are 'Time' and 'Amount'.  
+## 📊 Objective  
+The primary objective is to build **fair, explainable, and effective ML models** for fraud detection. The key challenges include:  
+- Handling extreme **class imbalance**.  
+- Mitigating dataset **bias** for fairness-aware ML.  
+- Adapting models to **temporal distribution shifts**.  
 
-- **Feature 'Time'** contains the seconds elapsed between each transaction and the first transaction in the dataset.  
-- **Feature 'Amount'** is the transaction amount, which can be used for example-dependent cost-sensitive learning.  
-- **Feature 'Class'** is the response variable and it takes value 1 in case of fraud and 0 otherwise.
+## 🏗️ Project Structure  
 
-## Evaluation Metrics
+## 🔥 Models & Techniques  
+The following **machine learning approaches** will be explored:  
+- **Baseline Models**: Logistic Regression, Decision Trees  
+- **Advanced Models**: XGBoost, LightGBM, Random Forest  
+ 
 
-Given the class imbalance ratio, we are measuring the accuracy using the **Area Under the Precision-Recall Curve (AUPRC)**. Confusion matrix accuracy is not meaningful for unbalanced classification.
+## 📈 Evaluation Metric  
+Given the dataset's extreme class imbalance, traditional accuracy is not meaningful. Instead, the competition recommends:  
+- **Area Under the Precision-Recall Curve (AUPRC)**  
+- **F1-Score and Recall** for fraud detection  
 
-## Key Performance Indicators (KPIs)
-
-- **AUPRC (Area Under Precision-Recall Curve)**: Measures how well the model identifies fraudulent transactions while minimizing false positives.
-- **Recall (Sensitivity)**: The percentage of actual frauds that are correctly identified.
-- **Precision**: The percentage of predicted frauds that are actually fraudulent.
-- **F1 Score**: The harmonic mean of precision and recall, balancing both metrics.
-- **False Positive Rate (FPR)**: The rate at which legitimate transactions are incorrectly flagged as fraud.
-- **False Negative Rate (FNR)**: The rate at which fraudulent transactions are missed.
 
  ## Stakeholders
 
