@@ -20,9 +20,10 @@ The primary objective is to build **fair, explainable, and effective ML models**
 
 
 ## 📈 Evaluation Metric  
-Given the dataset's extreme class imbalance, traditional accuracy is not meaningful. Instead, the competition recommends:  
+Given the dataset's extreme class imbalance, traditional accuracy is not meaningful. Instead, the competition recommends: 
+- **F1-Score**
 - **Area Under the Precision-Recall Curve (AUPRC)**  
-- **F1-Score and Recall** for fraud detection  
+- **Recall** 
 - **Precision**
 
 
@@ -38,7 +39,6 @@ This project is valuable to multiple stakeholders, including:
 - **Regulatory Agencies**: To ensure compliance with financial fraud prevention standards.
 
  ## 🏗️Repository Structure
-- data/: Contains the dataset from the Kaggle competition.
 - EDA/: Contains exploratory data analysis notebooks and reports.
 - Models/: Contains model selection experiments and results.
 
