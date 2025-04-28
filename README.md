@@ -16,18 +16,8 @@ The **BAF dataset** consists of **six synthetic tabular datasets** designed to s
 For more details, check out the [official Kaggle competition page](https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022?select=Base.csv).  
 
 ## 📊 Objective  
-The primary objective is to build **fair, explainable, and effective ML models** for fraud detection. The key challenges include:  
-- Handling extreme **class imbalance**.  
-- Mitigating dataset **bias** for fairness-aware ML.  
-- Adapting models to **temporal distribution shifts**.  
+The primary objective is to build **fair, explainable, and effective ML models** for fraud detection. The key challenges include handling extreme **class imbalance**.  
 
-## 🏗️ Project Structure  
-
-## 🔥 Models & Techniques  
-The following **machine learning approaches** will be explored:  
-- **Baseline Models**: Logistic Regression, Decision Trees  
-- **Advanced Models**: XGBoost, LightGBM, Random Forest , Bayesian model 
- 
 
 ## 📈 Evaluation Metric  
 Given the dataset's extreme class imbalance, traditional accuracy is not meaningful. Instead, the competition recommends:  
@@ -52,7 +42,7 @@ This project is valuable to multiple stakeholders, including:
 - EDA/: Contains exploratory data analysis notebooks and reports.
 - Models/: Contains model selection experiments and results.
 
-##Approach:
+## Approach:
 
 Our primary focus was to maximize the F1 score. To address the highly imbalanced dataset, we applied:
 - Undersampling techniques
