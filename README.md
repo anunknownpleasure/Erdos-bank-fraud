@@ -47,21 +47,21 @@ This project is valuable to multiple stakeholders, including:
 - **Data Scientists & Machine Learning Engineers**: To develop and refine models for fraud detection.
 - **Regulatory Agencies**: To ensure compliance with financial fraud prevention standards.
 
- ## Repository Structure:
-	•	data/: Contains the dataset from the Kaggle competition.
-	•	EDA/: Contains exploratory data analysis notebooks and reports.
-	•	Models/: Contains model selection experiments and results.
+ ## 🏗️Repository Structure
+- data/: Contains the dataset from the Kaggle competition.
+- EDA/: Contains exploratory data analysis notebooks and reports.
+- Models/: Contains model selection experiments and results.
 
 ##Approach:
 
 Our primary focus was to maximize the F1 score. To address the highly imbalanced dataset, we applied:
-	•	Undersampling techniques
-	•	Oversampling techniques using SMOTE
+- Undersampling techniques
+- Oversampling techniques using SMOTE
 
 We considered several models, including:
-	•	Logistic Regression
-	•	Decision Tree
-	•	K-Neighbors Classifier
+- Logistic Regression
+- Decision Tree
+- K-Neighbors Classifier
 
 The best F1 score was achieved using Logistic Regression with a threshold of 0.89, resulting in an F1 score of 0.21.
 
