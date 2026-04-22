@@ -39,3 +39,68 @@ This project is valuable to multiple stakeholders, including:
 
 
 This project is licensed under the MIT License.
+
+---
+
+## Setup
+
+```bash
+git clone <repo-url>
+cd Erdos-bank-fraud
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Download the dataset from Kaggle:
+# https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+# Place creditcard.csv in DATA/
+```
+
+## Usage
+
+### 1. Explore the data
+
+```bash
+jupyter notebook EDA/fraud_eda.ipynb
+```
+
+### 2. Preprocess
+
+```bash
+# Default: no oversampling (models use class_weight='balanced' / scale_pos_weight)
+python DATA/preprocess.py
+
+# Optional: apply SMOTE oversampling to the training fold
+python DATA/preprocess.py --smote
+```
+
+### 3. Train models
+
+```bash
+python MODELS/train_models.py
+```
+
+Trains four models — Logistic Regression, Random Forest, LightGBM, XGBoost — using 5-fold stratified cross-validation and prints a comparison table.
+
+### 4. Evaluate
+
+```bash
+python MODELS/evaluate.py
+```
+
+Reports all KPIs on the held-out test set and saves precision-recall and ROC curves to `outputs/figures/`.
+
+## Results
+
+| Model               | CV AUPRC (mean ± std) | Val AUPRC |
+|---------------------|-----------------------|-----------|
+| Logistic Regression | TBD                   | TBD       |
+| Random Forest       | TBD                   | TBD       |
+| LightGBM            | TBD                   | TBD       |
+| XGBoost             | TBD                   | TBD       |
+
+_Run the pipeline with your copy of `creditcard.csv` to populate this table._
+
+## Reproducibility
+
+All random states are fixed to `RANDOM_STATE = 42`. Results are fully deterministic given the same `creditcard.csv` input. The fitted `StandardScaler` is saved alongside the processed arrays in `outputs/processed/scaler.joblib` for consistent inference on new data.

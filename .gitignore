@@ -1,0 +1,33 @@
+# Dataset (too large for git)
+DATA/creditcard.csv
+DATA/*.csv
+DATA/*.parquet
+
+# Generated outputs
+outputs/
+
+# Model artifacts
+*.joblib
+*.pkl
+*.h5
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
