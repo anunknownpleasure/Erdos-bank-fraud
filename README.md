@@ -1,34 +1,39 @@
 # Bank Account Fraud Detection - Erdős Bootcamp  
 
-## 👥 Our Team  
-We are a team — Arpith Shanbhag and Maksim Kosmakov — participating in the  in the **Erdős Bootcamp**, working on the **Bank Account Fraud (BAF) Kaggle competition**. Our goal is to develop fair, explainable, and effective ML models for fraud detection, tackling challenges such as **class imbalance, bias, and temporal shifts**.  
+## Our Team  
+We are a team — Arpith Shanbhag and Maksim Kosmakov — participating in the **Erdős Bootcamp**, working on the **Bank Account Fraud (BAF) Kaggle competition**. Our goal is to develop fair, explainable, and effective ML models for fraud detection, tackling challenges such as **class imbalance, bias, and temporal shifts**.  
 
-## 🚀 Project Overview  
+## Project Overview  
 This repository contains our work for the **Bank Account Fraud (BAF) Kaggle competition**, which is based on the **NeurIPS 2022 BAF dataset**. The competition provides a **realistic, privacy-preserving, and imbalanced** fraud detection dataset.  
 
-## 📌 Dataset  
+## Dataset  
 The **BAF dataset** consists of **six synthetic tabular datasets** designed to simulate real-world fraud detection scenarios. It features:  
-- **Extremely imbalanced data** with a low prevalence of fraud cases.  
-- **Controlled biases** across different datasets.  
-- **Temporal aspects** with observed distribution shifts.  
-- **Privacy-preserving features**, including **differential privacy techniques** and a **CTGAN-generated dataset**.  
+- **Extremely imbalanced data** with a low prevalence of fraud cases (~1% fraud rate)
+- **Controlled biases** across different datasets
+- **Temporal aspects** with observed distribution shifts across 8 months
+- **Privacy-preserving features**, including **differential privacy techniques** and a **CTGAN-generated dataset**
+
+This project uses `Base.csv` (~1,000,000 rows, 30 features):
+
+- **Numerical**: `income`, `name_email_similarity`, `days_since_request`, `velocity_6h`, `velocity_24h`, `velocity_4w`, `credit_risk_score`, `session_length_in_minutes`, `proposed_credit_limit`, `bank_months_count`, `customer_age`, and others
+- **Categorical**: `payment_type`, `employment_status`, `housing_status`, `source`, `device_os`
+- **Target variable**: `fraud_bool` (1 = fraud, 0 = legitimate)
 
 For more details, check out the [official Kaggle competition page](https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022?select=Base.csv).  
 
-## 📊 Objective  
+## Objective  
 The primary objective is to build **fair, explainable, and effective ML models** for fraud detection. The key challenges include handling extreme **class imbalance**.  
 
-
-## 📈 Evaluation Metric  
-Given the dataset's extreme class imbalance, traditional accuracy is not meaningful. Instead, the competition recommends: 
+## Evaluation Metrics
+Given the dataset's extreme class imbalance, traditional accuracy is not meaningful. Instead, the competition recommends:
 - **F1-Score**
-- **Area Under the Precision-Recall Curve (AUPRC)**  
-- **Recall** 
+- **Area Under the Precision-Recall Curve (AUPRC)**
+- **Recall**
 - **Precision**
+- **False Positive Rate (FPR)**: The rate at which legitimate applications are incorrectly flagged as fraud.
+- **False Negative Rate (FNR)**: The rate at which fraudulent applications are missed.
 
-
-
- ## Stakeholders
+## Stakeholders
 
 This project is valuable to multiple stakeholders, including:
 
@@ -38,11 +43,12 @@ This project is valuable to multiple stakeholders, including:
 - **Data Scientists & Machine Learning Engineers**: To develop and refine models for fraud detection.
 - **Regulatory Agencies**: To ensure compliance with financial fraud prevention standards.
 
- ## 🏗️Repository Structure
-- EDA/: Contains exploratory data analysis notebooks and reports.
-- Models/: Contains model selection experiments and results.
+## Repository Structure
+- `EDA/`: Exploratory data analysis notebooks and reports
+- `DATA/`: Preprocessing script and data directory
+- `MODELS/`: Model training and evaluation scripts
 
-## Approach:
+## Approach
 
 Our primary focus was to maximize the F1 score. To address the highly imbalanced dataset, we applied:
 - Undersampling techniques
@@ -50,13 +56,13 @@ Our primary focus was to maximize the F1 score. To address the highly imbalanced
 
 We considered several models, including:
 - Logistic Regression
-- Decision Tree
-- K-Neighbors Classifier
+- Random Forest
+- LightGBM
+- XGBoost
 
 The best F1 score was achieved using Logistic Regression with a threshold of 0.89, resulting in an F1 score of 0.21.
 
-Further details, including precision-recall curves and clustering analysis, can be found in the model selection notebook (Models/model_selection.ipynb).
-
+Further details, including precision-recall curves and clustering analysis, can be found in the model selection notebook (`Models/model_selection.ipynb`).
 
 This project is licensed under the MIT License.
 
@@ -72,8 +78,8 @@ cd Erdos-bank-fraud
 pip install -r requirements.txt
 
 # Download the dataset from Kaggle:
-# https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
-# Place creditcard.csv in DATA/
+# https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022
+# Select Base.csv and place it in DATA/
 ```
 
 ## Usage
@@ -93,6 +99,8 @@ python DATA/preprocess.py
 # Optional: apply SMOTE oversampling to the training fold
 python DATA/preprocess.py --smote
 ```
+
+Applies a **temporal split by month** (months 1–5 train / month 6 val / months 7–8 test), label-encodes categorical features, and scales numerical features.
 
 ### 3. Train models
 
@@ -119,8 +127,8 @@ Reports all KPIs on the held-out test set and saves precision-recall and ROC cur
 | LightGBM            | TBD                   | TBD       |
 | XGBoost             | TBD                   | TBD       |
 
-_Run the pipeline with your copy of `creditcard.csv` to populate this table._
+_Run the pipeline with your copy of `Base.csv` to populate this table._
 
 ## Reproducibility
 
-All random states are fixed to `RANDOM_STATE = 42`. Results are fully deterministic given the same `creditcard.csv` input. The fitted `StandardScaler` is saved alongside the processed arrays in `outputs/processed/scaler.joblib` for consistent inference on new data.
+All random states are fixed to `RANDOM_STATE = 42`. The temporal split is deterministic. Fitted encoders and the `StandardScaler` are saved to `outputs/processed/` for consistent inference on new data.
