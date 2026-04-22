@@ -1,5 +1,5 @@
 """
-Train and cross-validate fraud detection models.
+Train and cross-validate fraud detection models on the BAF dataset.
 
 Requires processed arrays in outputs/processed/ (run DATA/preprocess.py first).
 
@@ -63,14 +63,18 @@ def build_models(scale_pos_weight: float) -> dict:
     }
 
 
-def train_and_select(data: dict) -> tuple[dict, str]:
+def train_and_select(data: dict) -> tuple:
     X_train, y_train = data["X_train"], data["y_train"]
     X_val, y_val = data["X_val"], data["y_val"]
 
     neg, pos = np.bincount(y_train.astype(int))
     scale_pos_weight = neg / pos
+    print(f"Training set — negatives: {neg:,}  positives: {pos:,}  "
+          f"scale_pos_weight: {scale_pos_weight:.1f}")
 
     models = build_models(scale_pos_weight)
+    # Use StratifiedKFold only within the training fold — temporal ordering
+    # is already respected by the month-based split in preprocess.py
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
 
     print(f"\n{'Model':<22} {'CV AUPRC (mean±std)':<26} {'Val AUPRC'}")
@@ -98,7 +102,6 @@ def train_and_select(data: dict) -> tuple[dict, str]:
     print(f"\nBest model: {best_name}  (Val AUPRC: {results[best_name]['val_auprc']:.4f})")
 
     os.makedirs(MODEL_OUT_DIR, exist_ok=True)
-    # Save every model so evaluate.py can plot all curves
     for name, r in results.items():
         joblib.dump(r["model"], os.path.join(MODEL_OUT_DIR, f"{name}.joblib"))
 
