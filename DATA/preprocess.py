@@ -6,10 +6,14 @@ Uses a temporal split by month — the correct evaluation strategy for fraud mod
   - Val   : month 6
   - Test  : months 7–8
 
-Feature selection (applied by default) uses three filters fitted on training data only:
-  1. Variance threshold  — drops near-constant numerical features
-  2. Target correlation  — drops numerical features with |corr to fraud_bool| < 0.01
-  3. Multicollinearity   — drops one of each pair with inter-feature |corr| > 0.90
+Feature selection mirrors the methodology in EDA/fraud_eda.ipynb: numerical features
+are ranked by absolute point-biserial correlation with fraud_bool (computed on training
+data only) and the top TOP_N_NUMERICAL are kept. All 5 categorical features are always
+included, consistent with the categorical fraud-rate analysis in both EDA notebooks.
+
+EDA/Bank_fraud_EDA.ipynb explicitly identified income, customer_age, credit_risk_score,
+and keep_alive_session as the most visually discriminative numerical features; these
+will be captured within the top-N selection.
 
 Usage:
     python DATA/preprocess.py                  # with feature selection (default)
@@ -24,7 +28,6 @@ import sys
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.feature_selection import VarianceThreshold
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 DATA_PATH = os.path.join(os.path.dirname(__file__), "Base.csv")
@@ -34,54 +37,28 @@ RANDOM_STATE = 42
 CATEGORICAL_FEATURES = ["payment_type", "employment_status", "housing_status", "source", "device_os"]
 TARGET = "fraud_bool"
 
-# Thresholds for feature selection
-VAR_THRESHOLD  = 0.01   # drop numerical features with variance below this
-CORR_MIN       = 0.01   # drop numerical features with |corr to target| below this
-MULTICOL_MAX   = 0.90   # drop one of each pair with |inter-feature corr| above this
+# Keep the top N numerical features by |correlation with fraud_bool|.
+# EDA/fraud_eda.ipynb visualises the top 12 for KDE plots and top 8 for boxplots;
+# 15 is chosen to cover those ranges while avoiding noise from weakly correlated features.
+TOP_N_NUMERICAL = 15
 
 
-def select_features(train_df, y_train, numerical_cols):
+def select_top_corr_features(train_df, y_train, numerical_cols):
     """
-    Return the list of numerical features to keep, fitted on training data only.
-    Prints a summary of what was removed at each step.
+    Return the TOP_N_NUMERICAL features with highest |correlation with fraud_bool|,
+    fitted on training data only (mirrors fraud_eda.ipynb's corr_with_target ranking).
     """
-    kept = list(numerical_cols)
+    corr = train_df[numerical_cols].corrwith(y_train).abs().sort_values(ascending=False)
+    kept = corr.head(TOP_N_NUMERICAL).index.tolist()
 
-    # --- 1. Variance threshold ---
-    vt = VarianceThreshold(threshold=VAR_THRESHOLD)
-    vt.fit(train_df[kept])
-    mask = vt.get_support()
-    dropped_var = [c for c, keep in zip(kept, mask) if not keep]
-    kept = [c for c, keep in zip(kept, mask) if keep]
-
-    # --- 2. Correlation with target ---
-    corr_target = train_df[kept].corrwith(y_train).abs()
-    dropped_corr = corr_target[corr_target < CORR_MIN].index.tolist()
-    kept = [c for c in kept if c not in dropped_corr]
-
-    # --- 3. Multicollinearity (upper-triangle of correlation matrix) ---
-    corr_matrix = train_df[kept].corr().abs()
-    upper = corr_matrix.where(
-        np.triu(np.ones(corr_matrix.shape, dtype=bool), k=1)
-    )
-    dropped_multi = [c for c in upper.columns if (upper[c] > MULTICOL_MAX).any()]
-    kept = [c for c in kept if c not in dropped_multi]
-
-    print(f"\nFeature selection (numerical):")
-    print(f"  Start             : {len(numerical_cols)} features")
-    if dropped_var:
-        print(f"  Low variance      : -{len(dropped_var):2d}  {dropped_var}")
-    else:
-        print(f"  Low variance      :   0  (none dropped)")
-    if dropped_corr:
-        print(f"  Low target corr   : -{len(dropped_corr):2d}  {dropped_corr}")
-    else:
-        print(f"  Low target corr   :   0  (none dropped)")
-    if dropped_multi:
-        print(f"  Multicollinear    : -{len(dropped_multi):2d}  {dropped_multi}")
-    else:
-        print(f"  Multicollinear    :   0  (none dropped)")
-    print(f"  Kept              : {len(kept)} features")
+    print(f"\nFeature selection — top {TOP_N_NUMERICAL} numerical by |corr with {TARGET}|:")
+    print(f"  {'Feature':<40} {'|corr|':>8}")
+    print(f"  {'-'*50}")
+    for feat in kept:
+        print(f"  {feat:<40} {corr[feat]:>8.4f}")
+    dropped = [c for c in numerical_cols if c not in kept]
+    if dropped:
+        print(f"\n  Dropped ({len(dropped)}): {dropped}")
 
     return kept
 
@@ -122,8 +99,9 @@ def load_and_split(smote: bool = False, feature_selection: bool = True):
 
     # Feature selection (fitted on training data only)
     if feature_selection:
-        y_train_series = train_df[TARGET]
-        kept_numerical = select_features(train_df[numerical_cols], y_train_series, numerical_cols)
+        kept_numerical = select_top_corr_features(
+            train_df[numerical_cols], train_df[TARGET], numerical_cols
+        )
     else:
         kept_numerical = numerical_cols
         print(f"\nFeature selection skipped — using all {len(numerical_cols)} numerical features.")
